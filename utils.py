@@ -134,5 +134,45 @@ class fileflip_utils:
     return upload_ui_card
   
   def render_download_ui():
-    ui.label("Download page")
+    # temporary section
+    ui.add_head_html('''
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body{
+        background-color: #161616;
+      }
+      .upload-label{
+        position: relative;
+        font-size: 2.5em;
+        color: white;
+        font-family: arial;
+        left: 35vw;
+        top: 7vw;
+      }
+      .upload-card {
+        background-color: #333;
+        color: white;
+        width: 30vw;
+        height: 20vw;         
+        box-shadow: 0 0 20px 10px #b400ff;
+        left: 35vw;
+        top: 21vh;
+      }
+      .upload-button{
+        position: relative;
+        top: 10vh;
+        left: 10vw;
+      }
+      .upload-section{
+       postion: relative;
+        top: 5vh;
+        left: 1.2vw;
+        background-color: #808080;
+      }
+      </style>''')
+    ui.label('Upload your files here ⬆️').classes('upload-label')
+    with ui.card().classes('upload-card') as download_ui_card:
+      ui.upload(max_files=1).classes('upload-section')
+      ui.button('upload',color='purple').classes('upload-button')
+    return download_ui_card
       
