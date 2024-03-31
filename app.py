@@ -11,5 +11,9 @@ def file_conversion_ui():
 def upload_ui():
     utils.render_upload_ui()
 
+@ui.page('/download')
+def download_ui():
+    utils.render_download_ui()
+
 if __name__ in {"__main__", "__mp_main__"}:
     ui.run()
