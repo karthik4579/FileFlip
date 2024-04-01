@@ -17,4 +17,4 @@ else:
      Path(f"{Path.cwd()}/temp_files/input").mkdir(parents=True)
      Path(f"{Path.cwd()}/temp_files/output").mkdir(parents=True)
 
-os.system(f"{Path.cwd()}/env/bin/python {Path.cwd()}/app.py")
+os.system(f"{Path.cwd()}/app.py")
