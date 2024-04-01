@@ -70,8 +70,8 @@ class fileflip_utils:
         font-size: 2.5em;
         color: white;
         font-family: arial;
-        left: 37vw;
-        top: 7vw;
+        left: 35vw;
+        bottom: 2vh;
       }
       .convert-label-2{
         position: relative;
@@ -85,8 +85,8 @@ class fileflip_utils:
         width: 30vw;
         height: 20vw;         
         box-shadow: 0 0 20px 10px #b400ff;
-        left: 35vw;
-        top: 21vh;
+        left: 33vw;
+        top: 4vh;
       }
       .convert-dropdown {
         position: relative;
@@ -103,7 +103,22 @@ class fileflip_utils:
         top: 12vh;
         left: 10vw;
       }
+      .logo{
+        position: relative;
+        width: 3vw;
+        height: auto;
+      }
+      .app-name{
+        position: relative;
+        color: white;
+        font-family: arial;
+        font-size: 1.5em;
+        bottom: 8.5vh;
+        left: 4vw;
+      }
       </style>''')
+    ui.image(f'{Path.cwd()}/static/logo.ico').classes('logo')
+    ui.label("FileFlip").classes('app-name')
     ui.label('Flip your files here 😉').classes('convert-label-1')
     with ui.card().classes('convert-card') as convert_ui_card:
       ui.label('Select your output format 👇').classes('convert-label-2')
@@ -123,8 +138,8 @@ class fileflip_utils:
         font-size: 2.5em;
         color: white;
         font-family: arial;
-        left: 35vw;
-        top: 7vw;
+        left: 33vw;
+        bottom: 2vh;
       }
       .upload-card {
         background-color: #333;
@@ -132,8 +147,8 @@ class fileflip_utils:
         width: 30vw;
         height: 20vw;         
         box-shadow: 0 0 20px 10px #b400ff;
-        left: 35vw;
-        top: 21vh;
+        left: 33.5vw;
+        top: 3vh;
       }
       .upload-button{
         position: relative;
@@ -146,7 +161,22 @@ class fileflip_utils:
         left: 1.2vw;
         background-color: #808080;
       }
+      .logo{
+        position: relative;
+        width: 3vw;
+        height: auto;
+      }
+      .app-name{
+        position: relative;
+        color: white;
+        font-family: arial;
+        font-size: 1.5em;
+        bottom: 8.5vh;
+        left: 4vw;
+      }
       </style>''')
+    ui.image(f'{Path.cwd()}/static/logo.ico').classes('logo')
+    ui.label("FileFlip").classes('app-name')
     ui.label('Upload your files here ⬆️').classes('upload-label')
     with ui.card().classes('upload-card') as upload_ui_card:
       ui.upload(max_files=1,on_upload=lambda e : self.on_upload(e)).classes('upload-section')
@@ -154,7 +184,6 @@ class fileflip_utils:
     return upload_ui_card
   
   def render_download_ui(self):
-    # temporary section
     ui.add_head_html('''
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -166,8 +195,8 @@ class fileflip_utils:
         font-size: 2.5em;
         color: white;
         font-family: arial;
-        left: 34vw;
-        top: 7vw;
+        left: 31.5vw;
+        bottom: 2vh;
       }
       .download-label-2{
         position: relative;
@@ -187,18 +216,39 @@ class fileflip_utils:
         width: 30vw;
         height: 20vw;         
         box-shadow: 0 0 20px 10px #b400ff;
-        left: 35vw;
-        top: 21vh;
+        left: 33vw;
+        top: 3vh;
       }
-      .upload-button{
+      .download-button{
         position: relative;
         top: 10vh;
-        left: 10vw;
+        left: 3vw;
+      }
+      .redirect-to-main-button{
+        position: relative;
+        top: 0.5vh;
+        left: 15vw;
+      }
+      .logo{
+        position: relative;
+        width: 3vw;
+        height: auto;
+      }
+      .app-name{
+        position: relative;
+        color: white;
+        font-family: arial;
+        font-size: 1.5em;
+        bottom: 8.5vh;
+        left: 4vw;
       }
       </style>''')
+    ui.image(f'{Path.cwd()}/static/logo.ico').classes('logo')
+    ui.label("FileFlip").classes('app-name')
     ui.label('Download your files here ⬇️').classes('download-label-1')
     with ui.card().classes('download-card') as download_ui_card:
       ui.label("Your file has been converted ✌️").classes("download-label-3")
       ui.label(f"From {self.input_file_name}  ➡️  {self.output_file_format}").classes("download-label-2")
-      ui.button('upload',color='purple',on_click= lambda: ui.download(src=f"{Path.cwd()}/temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}")).classes('upload-button')
+      ui.button('download',color='purple',on_click= lambda: ui.download(src=f"{Path.cwd()}/temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}")).classes('download-button')
+      ui.button('go to main',color='purple',on_click=lambda: ui.navigate.to('/upload')).classes('redirect-to-main-button')
     return download_ui_card
