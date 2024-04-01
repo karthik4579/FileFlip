@@ -1,6 +1,7 @@
 from nicegui import ui,events
 from pathlib import Path
 import pypandoc
+from pdf2docx import parse
 from unoserver.client import UnoClient
 from dotenv import dotenv_values
 import convertapi
@@ -17,6 +18,7 @@ class fileflip_utils:
     self.unoserver_supported_formats = ['odt','csv','doc','docx','dotx','fodp','fods','fodt','mml','odb','odf','odg','odm','odp','ods','otg','otp','ots','xls','xlsx','pptx','pdf']
     self.all_supported_formats = sorted(set(self.pandoc_supported_formats + self.unoserver_supported_formats))
     convertapi.api_secret = self.config['API_SECRET']
+    
 
   def on_upload(self,e:events.UploadEventArguments):
     file_data = e.content.read()
@@ -27,22 +29,32 @@ class fileflip_utils:
 
   def convert_file(self):
     input_file_format = Path(f"{Path.cwd()}/temp_files/input/{self.input_file_name}").suffix.split('.')[1]
+
     if input_file_format and self.output_file_format in self.all_supported_formats:
-      try:
-        ui.notify('Your file is converting ...', close_button='OK')
-        pypandoc.convert_file(source_file=f"{Path.cwd()}/temp_files/input/{self.input_file_name}",to=self.output_file_format,outputfile=f"{Path.cwd()}/temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}")
-      except:
-          self.client.convert(inpath=f"{Path.cwd()}/temp_files/input/{self.input_file_name}",outpath=f"{Path.cwd()}//temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}",convert_to=self.output_file_format)
-          '''
-          result = convertapi.convert(self.output_file_format, { 'File': f"{Path.cwd()}/temp_files/input/{self.input_file_name}" })
-          if result:
-            result.file.save(f"{Path.cwd()}//temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}")
-          else:
-            ui.notify("Conversion failed")
-            '''
+      if input_file_format == "pdf" and self.output_file_format == "docx":
+        parse(pdf_file=f"{Path.cwd()}/temp_files/input/{self.input_file_name}",docx_file=f"{Path.cwd()}/temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}")
       else:
-        ui.notify("Conversion successful",type="positive")
-        ui.navigate.to("/download")
+        try:
+          ui.notify('Your file is converting ...', close_button='OK')
+          pypandoc.convert_file(source_file=f"{Path.cwd()}/temp_files/input/{self.input_file_name}",to=self.output_file_format,outputfile=f"{Path.cwd()}/temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}")
+        except:
+          try:
+            self.client.convert(inpath=f"{Path.cwd()}/temp_files/input/{self.input_file_name}",outpath=f"{Path.cwd()}/temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}",convert_to=self.output_file_format)
+          except:
+            try:
+              result = convertapi.convert(self.output_file_format, { 'File': f"{Path.cwd()}/temp_files/input/{self.input_file_name}" })
+              result.file.save(f"{Path.cwd()}/temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}")
+            except:
+              ui.notify("Conversion failed",type="negative")
+            else:
+              ui.notify("Conversion successful",type="positive")
+              ui.navigate.to("/download")
+          else:
+              ui.notify("Conversion successful",type="positive")
+              ui.navigate.to("/download")
+        else:
+          ui.notify("Conversion successful",type="positive")
+          ui.navigate.to("/download")
     else:
        ui.notify('This format is not supported', type='negative')  
 
@@ -154,20 +166,20 @@ class fileflip_utils:
         font-size: 2.5em;
         color: white;
         font-family: arial;
-        left: 35vw;
+        left: 34vw;
         top: 7vw;
       }
       .download-label-2{
         position: relative;
         font-size: 1.2em;
-        left: 5.5vw;
-        top: 2vh;
+        left: 7vw;
+        top: 7vh;
       }
       .download-label-3{
         position: relative;
         font-size: 1.2em;
-        left: 5.5vw;
-        top: 1vh;
+        left: 4.5vw;
+        top: 6vh;
       }
       .download-card {
         background-color: #333;
@@ -178,15 +190,15 @@ class fileflip_utils:
         left: 35vw;
         top: 21vh;
       }
-      .download-button{
+      .upload-button{
         position: relative;
         top: 10vh;
         left: 10vw;
       }
       </style>''')
-    ui.label('download your files here ⬇️').classes('download-label-1')
+    ui.label('Download your files here ⬇️').classes('download-label-1')
     with ui.card().classes('download-card') as download_ui_card:
-      ui.label("Your file has been converted").classes("download-label-3")
-      ui.label(f"From {self.input_file_name} to {self.output_file_format}").classes("download-label-2")
+      ui.label("Your file has been converted ✌️").classes("download-label-3")
+      ui.label(f"From {self.input_file_name}  ➡️  {self.output_file_format}").classes("download-label-2")
       ui.button('upload',color='purple',on_click= lambda: ui.download(src=f"{Path.cwd()}/temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}")).classes('upload-button')
     return download_ui_card

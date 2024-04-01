@@ -1,5 +1,5 @@
 from nicegui import ui
-from utils import fileflip_utils
+from utils import fileflip_utils,Path
 
 utils = fileflip_utils()
 
@@ -16,4 +16,4 @@ def download_ui():
     utils.render_download_ui()
 
 if __name__ in {"__main__", "__mp_main__"}:
-    ui.run()
+    ui.run(favicon=f"{Path.cwd()}/static/logo.ico")
