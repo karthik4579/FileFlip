@@ -9,7 +9,6 @@ import convertapi
 
 class fileflip_utils:
   def __init__(self):
-    ui.page_title("FileFlip")
     self.client = UnoClient()
     self.config = dotenv_values(f"{Path.cwd()}/config.env")
     self.input_file_name = None
@@ -32,7 +31,12 @@ class fileflip_utils:
 
     if input_file_format and self.output_file_format in self.all_supported_formats:
       if input_file_format == "pdf" and self.output_file_format == "docx":
-        parse(pdf_file=f"{Path.cwd()}/temp_files/input/{self.input_file_name}",docx_file=f"{Path.cwd()}/temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}")
+        try:
+          parse(pdf_file=f"{Path.cwd()}/temp_files/input/{self.input_file_name}",docx_file=f"{Path.cwd()}/temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}")
+          ui.notify("Conversion successful",type="positive")
+          ui.navigate.to("/download")
+        except:
+          ui.notify("Conversion failed",type="negative")
       else:
         try:
           ui.notify('Your file is converting ...', close_button='OK')
@@ -59,6 +63,7 @@ class fileflip_utils:
        ui.notify('This format is not supported', type='negative')  
 
   def render_conversion_ui(self):
+    ui.page_title("FileFlip")
     ui.add_head_html('''
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -127,6 +132,7 @@ class fileflip_utils:
     return convert_ui_card
   
   def render_upload_ui(self):
+    ui.page_title("FileFlip")
     ui.add_head_html('''
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -184,6 +190,8 @@ class fileflip_utils:
     return upload_ui_card
   
   def render_download_ui(self):
+    ui.page_title("FileFlip")
+    ui.page_title("FileFlip")
     ui.add_head_html('''
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -250,5 +258,5 @@ class fileflip_utils:
       ui.label("Your file has been converted ✌️").classes("download-label-3")
       ui.label(f"From {self.input_file_name}  ➡️  {self.output_file_format}").classes("download-label-2")
       ui.button('download',color='purple',on_click= lambda: ui.download(src=f"{Path.cwd()}/temp_files/output/{self.input_file_name.split('.')[0]}.{self.output_file_format}")).classes('download-button')
-      ui.button('go to main',color='purple',on_click=lambda: ui.navigate.to('/upload')).classes('redirect-to-main-button')
+      ui.button('go to main',color='purple',on_click=lambda: ui.navigate.to('/')).classes('redirect-to-main-button')
     return download_ui_card

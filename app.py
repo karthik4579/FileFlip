@@ -11,13 +11,13 @@ else:
      Path(f"{Path.cwd()}/temp_files/input").mkdir(parents=True)
      Path(f"{Path.cwd()}/temp_files/output").mkdir(parents=True)
 
+@ui.page('/')
+def upload_ui():
+    utils.render_upload_ui()
+
 @ui.page('/convert')
 def file_conversion_ui():
     utils.render_conversion_ui()
-
-@ui.page('/upload')
-def upload_ui():
-    utils.render_upload_ui()
 
 @ui.page('/download')
 def download_ui():
