@@ -1,7 +1,15 @@
 from nicegui import ui
 from utils import fileflip_utils,Path
+import psutil
 
 utils = fileflip_utils()
+process_names = [proc.name() for proc in psutil.process_iter()]
+    
+if Path(f"{Path.cwd()}/temp_files/input").exists() and Path(f"{Path.cwd()}/temp_files/output").exists():
+     pass
+else:
+     Path(f"{Path.cwd()}/temp_files/input").mkdir(parents=True)
+     Path(f"{Path.cwd()}/temp_files/output").mkdir(parents=True)
 
 @ui.page('/convert')
 def file_conversion_ui():
